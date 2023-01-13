@@ -14,7 +14,7 @@ Used technologies:
   - Blazored LocalStorage (for holding logged in user JWT token)
   
   
-**aPPLICATION OVERVIEW:**
+**APPLICATION OVERVIEW:**
 
 Home page:
 ![2023-01-13 15_22_26-Window](https://user-images.githubusercontent.com/74303970/212345588-c1444311-4a54-4ef0-8ed0-c71aa34c8fc1.png)
