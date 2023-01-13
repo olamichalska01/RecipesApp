@@ -63,4 +63,4 @@
 #*.RTF   diff=astextplain
 
 
-BlazorApp4/Client/wwwroot/Site2_whole_main_page/nicepage.css linguist-vendored=false
+*.css linguist-vendored
