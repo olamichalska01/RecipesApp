@@ -1,8 +1,45 @@
 # RecipesApp
-![2023-01-13 15_29_00-Window](https://user-images.githubusercontent.com/74303970/212344228-d9b6ca67-7193-42bb-a66a-3bc00df6fcb1.png)
-![2023-01-13 15_29_19-Window](https://user-images.githubusercontent.com/74303970/212344232-cb93c7ea-fff3-4919-9688-bb2beadc4117.png)
-![2023-01-13 15_29_29-Window](https://user-images.githubusercontent.com/74303970/212344233-4da3d413-8d33-4424-afb0-413e13102f36.png)
-![2023-01-13 15_22_26-Window](https://user-images.githubusercontent.com/74303970/212344236-7913ce26-4230-4617-83e1-8638903b726b.png)
-![2023-01-13 15_24_23-Window](https://user-images.githubusercontent.com/74303970/212344241-e379f2fd-4911-4901-b4cf-1a4aa56f95ce.png)
-![2023-01-13 15_27_58-Window](https://user-images.githubusercontent.com/74303970/212344242-109b115b-d0f6-49cb-b4b2-12215675d64c.png)
-![2023-01-13 15_28_22-Window](https://user-images.githubusercontent.com/74303970/212344243-315b9198-9197-4acc-ac8a-77b75d26faf7.png)
+
+About the project:
+
+This is a recipe web application built for an academic project. 
+Used technologies:
+
+- C# for backend 
+- Blazor for frontend 
+- HTML, CSS
+- SQL Server for database holding all data
+- Frameworks and libraries:
+  - .NET Core 6.0
+  - Entity Framework Core
+  - Blazored LocalStorage (for holding logged in user JWT token)
+  
+  
+Application overview:
+
+Home page:
+![2023-01-13 15_22_26-Window](https://user-images.githubusercontent.com/74303970/212345588-c1444311-4a54-4ef0-8ed0-c71aa34c8fc1.png)
+
+
+Login page:
+![2023-01-13 15_38_21-Window](https://user-images.githubusercontent.com/74303970/212346126-27cdf14a-878f-4384-abcf-05c93d8e9647.png)
+
+
+Register page:
+![2023-01-13 15_38_43-Window](https://user-images.githubusercontent.com/74303970/212346145-a3b7e056-b3bf-4787-88d4-b676cec6c448.png)
+
+
+**View for a user who is not logged in:**
+
+After clicking a button "checkout our incredible recipes" on home page, the user is redirected to page with recipes:
+![2023-01-13 15_29_19-Window](https://user-images.githubusercontent.com/74303970/212346403-7c60d331-c520-4546-b5dd-8bc695c92107.png)
+
+Then, user can filter recipes based on difficulty level:
+![2023-01-13 15_29_29-Window](https://user-images.githubusercontent.com/74303970/212346677-991e1bd9-cc5a-4b00-8d63-c91b0228502f.png)
+
+And display recipe:
+![2023-01-13 15_42_03-Window](https://user-images.githubusercontent.com/74303970/212346826-f722164c-d22a-4381-bae5-0039b3e9d6d3.png)
+
+
+
+View for a user who is logged in:
