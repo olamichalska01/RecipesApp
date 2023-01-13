@@ -62,5 +62,5 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
-RecipesApp/BlazorApp4/Client/wwwroot/Site2_whole_main_page/nicepage.css linguist-vendored
+./BlazorApp4/Client/wwwroot/Site2_whole_main_page/nicepage.css linguist-vendored
 *.html linguist-vendored
