@@ -1,0 +1,331 @@
+﻿@page "/CakesList/{id:int}"
+@inject NavigationManager NavigationManager
+@inject IRecipeService RecipeService
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using Microsoft.AspNetCore.Components.Web
+@using Newtonsoft.Json
+@using System.Text
+@using System.Web
+@using Markdig
+
+<body data-lang="en">
+    <header class="u-clearfix u-header u-header" id="sec-8f6a">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <a class="u-image u-logo u-image-1" data-image-width="200" data-image-height="63">
+                <img src="Site2_whole_main_page/images/logo_mini.png" class="u-logo-image u-logo-image-1">
+            </a>
+            <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+                <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+                    <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+                        <svg class="u-svg-link" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use></svg>
+                        <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+                <div class="u-custom-menu u-nav-container">
+                    <ul class="u-nav u-unstyled u-nav-1">
+                        <li class="u-nav-item">
+                            <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
+                        </li>
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" @onclick="Logout" style="padding: 10px 20px;">Logout</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;"><i class="fas fa-user"></i>    @context.User.Identity.Name</a>
+                                </li>
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/register" style="padding: 10px 20px;">Register</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/login" style="padding: 10px 20px;">Login</a>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </ul>
+                </div>
+                <div class="u-custom-menu u-nav-container-collapse">
+                    <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+                        <div class="u-inner-container-layout u-sidenav-overflow">
+                            <div class="u-menu-close"></div>
+                            <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                                <li class="u-nav-item">
+                            <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
+                        </li>
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" @onclick="Logout" style="padding: 10px 20px;">Logout</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;"><i class="fas fa-user"></i>    @context.User.Identity.Name</a>
+                                </li>
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/register" style="padding: 10px 20px;">Register</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/login" style="padding: 10px 20px;">Login</a>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                        </ul>
+                        </div>
+                    </div>
+                    <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+@if (recipeContents == null)
+{
+    <span>loading...</span>
+}
+else
+{
+    <AuthorizeView>
+        <Authorized>
+            <div class="body-divider-recipe-logged-in">
+                <div class="new-ingredient-place">
+                    <EditForm Model="@newIngredient" Context="formContext">
+                            <div class="edit-form-content">Add ingredient</div>
+                        <div class="form-group row">
+                                <div class="col-sm-10-logged-in">
+                                <InputText id="ingredientName" class="form-control" placeholder="Ingredient Name"
+                                       @bind-Value="newIngredient.IngredientName" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                                <div class="col-sm-10-logged-in">
+                                <InputNumber id="amount" class="form-control" placeholder="Amount"
+                                         @bind-Value="newIngredient.Amount" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                                <div class="col-sm-10-logged-in">
+                                <InputText id="unitOfMeasure" class="form-control" placeholder="Unit"
+                                       @bind-Value="newIngredient.UnitOfMeasureName" />
+                            </div>
+                        </div>
+                        <div>
+                            <button class="button-48-check" role="button" id="testola" @onclick="(() => AddIngredient(recipeContents.RecipeId))">
+                                    <span class="text">Apply</span>
+                            </button>
+                        </div>
+                        <div class="text-danger">
+                            <span>@errorMessage</span>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="new-title-place">
+                    <EditForm Model="@recipeTitleDto" Context="formContext">
+                            <div class="edit-form-content">Change title</div>
+                            <div class="form-group row">
+                                <div class="col-sm-10-logged-in">
+                                <InputText id="newtitle" class="form-control" placeholder="new Name"
+                                       @bind-Value="recipeTitleDto.Title" />
+                            </div>
+                            </div>
+                        <div>
+                                <button class="button-48-check" role="button" id="testola" @onclick="(() => ChangeTitle())">
+                                    <span class="text">Apply</span>
+                                </button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div id="recipe-picture-logged-in">
+                    <div class="recipe-picture-container" style="background-image: url(@recipeContents.PictureUrl);"></div>
+                </div>
+                <div id="recipe-title-logged-in">
+                    <h3 class="recipe-title-style">@recipeContents.RecipeTitle</h3>
+                </div>
+                    <div id="recipe-content-logged-in">
+                    <div class="content-holder">
+                        @((MarkupString)content)
+                    </div>
+                </div>
+                    <div id="recipe-ingredients-logged-in">
+                    <table class="table table-sm" align="left">
+                        <thead>
+                            <tr>
+                                <th class="ingredients-title">List of ingredients</th>
+                                <th class="ingredients-title"></th>
+                                <th class="ingredients-title"></th>
+                                <th class="ingredients-title"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var ingredient in recipeIngredients)
+                            {
+                                <tr>
+                                    <td class="ingredients-content">
+                                        @ingredient.IngredientName
+                                    </td>
+                                    <td class="ingredients-content">
+                                        @ingredient.Amount
+                                    </td>
+                                    <td class="ingredients-content">
+                                        @ingredient.UnitOfMeasure.UnitOfMeasureName
+                                    </td>
+                                    <td class="ingredients-content">
+                                        <button class="btn btn-primary-del" @onclick="(() => DeleteIngredientFromRecipe(recipeContents.RecipeId, ingredient.IngredientId))">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <div class="body-divider-recipe">
+            <div id="recipe-picture">
+                <div class="recipe-picture-container" style="background-image: url(@recipeContents.PictureUrl);"></div>
+            </div>
+            <div id="recipe-title">
+                <h3 class="recipe-title-style">@recipeContents.RecipeTitle</h3>
+            </div>
+            <div id="recipe-content">
+                <div class="content-holder">
+                    @((MarkupString)content)
+                </div>
+            </div>
+            <div id="recipe-ingredients">
+                <table class="table table-sm" align="left">
+                    <thead>
+                        <tr>
+                            <th class="ingredients-title">List of ingredients</th>
+                            <th class="ingredients-title"></th>
+                            <th class="ingredients-title"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ingredient in recipeIngredients)
+                        {
+                            <tr>
+                                <td class="ingredients-content">
+                                    @ingredient.IngredientName
+                                </td>
+                                <td class="ingredients-content">
+                                    @ingredient.Amount
+                                </td>
+                                <td class="ingredients-content">
+                                    @ingredient.UnitOfMeasure.UnitOfMeasureName
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+    </div>
+        </NotAuthorized>
+    </AuthorizeView>   
+   
+}
+
+
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-47bb">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
+        </div>
+    </footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+        <a class="u-link" href="https://nicepage.com/html-templates" target="_blank">
+            <span>HTML Template</span>
+        </a>
+        <p class="u-text">
+            <span>created with</span>
+        </p>
+        <a class="u-link" href="https://nicepage.com/html-website-builder" target="_blank">
+            <span>HTML Builder</span>
+        </a>
+    </section>
+</body>
+
+
+
+
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+
+    public Recipe recipeContents;
+    public RecipeTitleDto recipeTitleDto = new RecipeTitleDto{Title = ""};
+    private List<Ingredient> recipeIngredients;
+    private IngredientDto newIngredient = new IngredientDto{IngredientName = "", Amount = 0, UnitOfMeasureName = ""};
+    private string unitOfMeasure = "";
+    private string errorMessage;
+    private MarkupString content;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshPage();
+    }
+
+    async void AddIngredient(int recipeId)
+    {
+        var response = await RecipeService.AddIngredientToRecipe(recipeId, newIngredient);
+
+        if(response.Success)
+        {
+            errorMessage = null;
+            await RefreshPage();
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    async void DeleteIngredientFromRecipe(int recipeId, int ingredientId)
+    {
+        await RecipeService.DeleteIngredientFromRecipe(recipeId, ingredientId);
+        await RefreshPage();
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    async void ChangeTitle()
+    {
+        var response = await RecipeService.ChangeRecipeTitle(recipeTitleDto, recipeContents);
+
+        if (response.Success)
+        {
+            errorMessage = null;
+            await RefreshPage();
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
+
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    private async Task RefreshPage()
+    {
+        recipeContents = await RecipeService.GetRecipeContent(id);
+        content = new MarkupString(recipeContents.RecipeSteps);
+        recipeIngredients = recipeContents.Ingredients;
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("");
+    }
+
+}

@@ -1,0 +1,245 @@
+﻿@page "/cakeslist"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@inject ICakeService CakeService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JSruntime
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<!--font awesome-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+<!-- google fonts-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@200&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Abril+Fatface" rel="stylesheet">
+
+<body data-lang="en">
+    <header class="u-clearfix u-header u-header" id="sec-8f6a">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <a class="u-image u-logo u-image-1" data-image-width="200" data-image-height="63">
+                <img src="Site2_whole_main_page/images/logo_mini.png" class="u-logo-image u-logo-image-1">
+            </a>
+            <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+                <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+                    <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+                        <svg class="u-svg-link" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use></svg>
+                        <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+                <div class="u-custom-menu u-nav-container">
+                    <ul class="u-nav u-unstyled u-nav-1">
+                        <li class="u-nav-item">
+                            <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
+                        </li>
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" @onclick="Logout" style="padding: 10px 20px;">Logout</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;"><i class="fas fa-user"></i>    @context.User.Identity.Name</a>
+                                </li>
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/register" style="padding: 10px 20px;">Register</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/login" style="padding: 10px 20px;">Login</a>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </ul>
+                </div>
+                <div class="u-custom-menu u-nav-container-collapse">
+                    <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+                        <div class="u-inner-container-layout u-sidenav-overflow">
+                            <div class="u-menu-close"></div>
+                            <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/" style="padding: 10px 20px;">Home</a>
+                                </li>
+                                <AuthorizeView>
+                                    <Authorized>
+                                        <li class="u-nav-item">
+                                            <a class="u-button-style u-nav-link" style="padding: 10px 20px;"><i class="fas fa-user"></i>    @context.User.Identity.Name</a>
+                                        </li>
+                                        <li class="u-nav-item">
+                                            <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" @onclick="Logout" style="padding: 10px 20px;">Logout</a>
+                                        </li>
+                                    </Authorized>
+                                    <NotAuthorized>
+                                        <li class="u-nav-item">
+                                            <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/register" style="padding: 10px 20px;">Register</a>
+                                        </li>
+                                        <li class="u-nav-item">
+                                            <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" href="/login" style="padding: 10px 20px;">Login</a>
+                                        </li>
+                                    </NotAuthorized>
+                                </AuthorizeView>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+
+@if (cakes == null)
+{
+    <div >loading...</div>
+}
+else {
+    <div class="body-divider">
+        <div class="body-part-1">
+            <h3 class="h3-recipe-index">Recipe Index</h3>
+            <EditForm Model="@filterDifficultyLevelValue">
+                <div class="col-sm-10">
+                    <div class="filter-sign">Filter by difficulty level:</div>
+                    <InputSelect id="level" @bind-Value="filterDifficultyLevelValue" class="form-control">
+                            <option id="difficultyLevel">-</option>
+                            @foreach (var difficultyLevel in availableDifficultyLevels)
+                        {
+                            <option id="difficultyLevel">@difficultyLevel</option>
+                        }
+                    </InputSelect>
+                </div>
+            </EditForm>
+                <button class="button-48" role="button" id="testola" @onclick="(() => FilterByDifficultyLevel())"><span class="text">Apply</span></button>
+        </div>
+        <div id="grid">
+            
+            <AuthorizeView>
+                <Authorized>
+                        <div>
+                            <div id="card-wrapper-add-cake">
+                                <div class="add-recipe-title">
+                                    Add new recipe
+                                </div>
+                                <div class="inner-card-add-cake">
+                                    
+                                    <div class="add-btn">
+                                        <button class="round-1" @onclick="(() => AddCake())"><i class="fas fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    
+                </Authorized>
+            </AuthorizeView>
+            @foreach (var cake in cakes)
+            {
+                <div>
+                        <div style="background-image: url(@cake.Recipe.PictureUrl);" id="card-wrapper">
+                        <div class="inner-card">
+                            <AuthorizeView>
+                                <Authorized>
+                                    <div class="more-info-btn">
+                                        <div class="btn-background">
+                                            <a @onclick="(() => DeleteCake(cake.CakeId))">delete</a>
+                                        </div>
+                                    </div>
+                                </Authorized>
+                            </AuthorizeView>
+                            
+                            <div id="title">
+                                <header>@cake.CakeName</header>
+                            </div>
+
+                            <div id="details">
+
+                                <div class="Details">
+                                    <h3 class="h3-special">Level</h3>
+                                    <p>@cake.DifficultyLevel</p>
+                                </div>
+
+                                <div class="Details">
+                                    <h3 class="h3-special">Time</h3>
+                                    <p>@cake.PreparationTime</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="start-btn"><a @onclick="(() => ShowCake(cake.CakeId))">Start Cooking <i class="fas fa-long-arrow-alt-right"></i></a></div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+}
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-47bb">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <p class="u-small-text u-text u-text-variant u-text-1">Sample text. Click to select the Text Element.</p>
+        </div>
+    </footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+        <a class="u-link" href="https://nicepage.com/html-templates" target="_blank">
+            <span>HTML Template</span>
+        </a>
+        <p class="u-text">
+            <span>created with</span>
+        </p>
+        <a class="u-link" href="https://nicepage.com/html-website-builder" target="_blank">
+            <span>HTML Builder</span>
+        </a>
+    </section>
+</body>
+
+@code {
+    private List<Cake> cakes;
+    private string filterDifficultyLevelValue = "-";
+    private IEnumerable<string> availableDifficultyLevels;
+    private IJSObjectReference jsModule;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await RefreshPage();
+        jsModule = await JSruntime.InvokeAsync<IJSObjectReference>("import", "./Pages/CakesMainPage.razor.js");
+        
+    }
+
+    private void ShowCake(int id)
+    {
+        NavigationManager.NavigateTo($"CakesList/{id}");
+    }
+
+    private async void DeleteCake(int id)
+    {
+        await CakeService.DeleteCake(id);
+        await RefreshPage();
+    }
+
+    public async void AddCake()
+    {
+        NavigationManager.NavigateTo("/AddNewCake");
+    }
+
+    public async void FilterByDifficultyLevel()
+    {
+        cakes = await CakeService.FilterByDifficultyLevel(filterDifficultyLevelValue);
+        await InvokeAsync(() => StateHasChanged());
+    }
+
+    private async Task RefreshPage()
+    {
+        cakes = await CakeService.GetCakes();
+        availableDifficultyLevels = await CakeService.GetCurrentDifficultyLevels(cakes);
+        await InvokeAsync(() => StateHasChanged()); 
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("");
+    }
+}

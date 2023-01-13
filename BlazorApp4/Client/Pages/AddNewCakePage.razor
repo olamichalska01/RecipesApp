@@ -1,0 +1,238 @@
+﻿@page "/AddNewCake"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Web
+@inject ICakeService CakeService
+@inject IRecipeService RecipeService
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@attribute [Authorize]
+
+<body data-lang="en">
+    <header class="u-clearfix u-header u-header" id="sec-8f6a">
+        <div class="u-clearfix u-sheet u-sheet-1">
+            <a class="u-image u-logo u-image-1" data-image-width="200" data-image-height="63">
+                <img src="Site2_whole_main_page/images/logo_mini.png" class="u-logo-image u-logo-image-1">
+            </a>
+            <nav class="u-menu u-menu-one-level u-offcanvas u-menu-1">
+                <div class="menu-collapse" style="font-size: 1rem; letter-spacing: 0px;">
+                    <a class="u-button-style u-custom-left-right-menu-spacing u-custom-padding-bottom u-custom-text-active-color u-custom-top-bottom-menu-spacing u-nav-link u-text-active-palette-1-base u-text-hover-palette-2-base" href="#">
+                        <svg class="u-svg-link" viewBox="0 0 24 24"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#menu-hamburger"></use></svg>
+                        <svg class="u-svg-content" version="1.1" id="menu-hamburger" viewBox="0 0 16 16" x="0px" y="0px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <rect y="1" width="16" height="2"></rect><rect y="7" width="16" height="2"></rect><rect y="13" width="16" height="2"></rect>
+                            </g>
+                        </svg>
+                    </a>
+                </div>
+                <div class="u-custom-menu u-nav-container">
+                    <ul class="u-nav u-unstyled u-nav-1">
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" @onclick="Logout" style="padding: 10px 20px;">Logout</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;"><i class="fas fa-user"></i>    @context.User.Identity.Name</a>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+                    </ul>
+                </div>
+                <div class="u-custom-menu u-nav-container-collapse">
+                    <div class="u-black u-container-style u-inner-container-layout u-opacity u-opacity-95 u-sidenav">
+                        <div class="u-inner-container-layout u-sidenav-overflow">
+                            <div class="u-menu-close"></div>
+                            <ul class="u-align-center u-nav u-popupmenu-items u-unstyled u-nav-2">
+                                <AuthorizeView>
+                            <Authorized>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link u-text-active-palette-2-dark-1 u-text-hover-palette-2-base" @onclick="Logout" style="padding: 10px 20px;">Logout</a>
+                                </li>
+                                <li class="u-nav-item">
+                                    <a class="u-button-style u-nav-link" style="padding: 10px 20px;"><i class="fas fa-user"></i>    @context.User.Identity.Name</a>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="u-black u-menu-overlay u-opacity u-opacity-70"></div>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <h3 class="h3-recipe-index">Add new cake recipe</h3>
+
+  
+<EditForm Model="@newCakeDto" Context="formContext" OnValidSubmit="AddNewCakeRecipe">
+    <DataAnnotationsValidator />
+        <div>
+            <div class="divider-add-cake">
+                <div>
+                    <div class="col-sm-11">Cake details</div>
+
+                    <div class="form-group row-add-cake">
+                        <div class="col-sm-10">
+                            <InputText id="cakename" class="form-control" placeholder="Cake Name"
+                                       @bind-Value="newCakeDto.CakeName" />
+                            <ValidationMessage For="@(() => newCakeDto.CakeName)" />
+                        </div>
+                    </div>
+                    <div class="form-group row-add-cake">
+                        <div class="col-sm-10">
+                            <InputText id="preptime" class="form-control" placeholder="Preparation time"
+                                       @bind-Value="newCakeDto.PreparationTime" />
+                            <ValidationMessage For="@(() => newCakeDto.PreparationTime)" />
+                        </div>
+                    </div>
+                    <div class="form-group row-add-cake">
+                        <div class="col-sm-10">
+                            <label>
+                                Difficulty level
+                                <InputSelect id="level" @bind-Value="newCakeDto.DifficultyLevel" class="form-control">
+                                    @foreach (var difficultyLevel in filterDifficultyLevelValue)
+                                    {
+                                        <option id="difficultyLevel">@difficultyLevel</option>
+                                    }
+                                </InputSelect>
+                            </label>
+                            <ValidationMessage For="@(() => newCakeDto.DifficultyLevel)" />
+                        </div>
+                    </div>
+                    <br />
+                </div>
+                <div>
+                    <div class="col-sm-11">Recipe Details</div>
+                    <div class="form-group row-add-cake">
+                        <div class="col-sm-10">
+                            <InputText id="recipetitle" class="form-control" placeholder="Recipe Title"
+                                       @bind-Value="newCakeDto.RecipeTitle" />
+                            <ValidationMessage For="@(() => newCakeDto.RecipeTitle)" />
+                        </div>
+                    </div>
+                    <div class="form-group row-add-cake">
+                        <div class="col-sm-10">
+                            <img src="@newCakeDto.Picture" class="pic-class"><br /><br />
+                            <label>
+                                Choose recipe photo
+                                <InputFile id="cakephoto" class="form-control" placeholder="Cake Photo"
+                                           @bind-Value="newCakeDto.Picture" OnChange="@OnInputFileChanged" />
+                            </label>
+
+                            <ValidationMessage For="@(() => newCakeDto.Picture)" />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group row-add-cake">
+                        <div class="col-sm-10">
+                            <label>
+                                Choose input file with recipe steps
+                                <InputFile id="cakerecipe" class="form-control" placeholder="Cake Recipe"
+                                           @bind-Value="newCakeDto.RecipeSteps" OnChange="@OnInputRecipeContentsChanged" />
+                            </label>
+                            <ValidationMessage For="@(() => newCakeDto.RecipeSteps)" />
+                        </div>
+                    </div>
+                    <div>
+                    <button class="button-48" type="submit" role="button" id="submitbtn">
+                        <span class="text">Submit and add ingredients</span>
+                    </button>
+                    <br />
+                    <button class="button-48" role="button" id="cancelbtn" @onclick="@(() => {Cancel();})">
+                        <span class="text">Cancel</span>
+                    </button>
+                </div>
+                </div>
+                
+            </div>
+        
+            
+    </div>
+</EditForm>
+
+
+
+    <footer class="u-align-center u-clearfix u-footer u-grey-80 u-footer" id="sec-47bb">
+        <p class="u-text">
+            <span>Sample text. <br />Click to select the Text Element.</span>
+        </p>
+    </footer>
+    <section class="u-backlink u-clearfix u-grey-80">
+        <a class="u-link" href="https://nicepage.com/html-templates" target="_blank">
+            <span>HTML Template</span>
+        </a>
+        <p class="u-text">
+            <span>created with</span>
+        </p>
+        <a class="u-link" href="https://nicepage.com/html-website-builder" target="_blank">
+            <span>HTML Builder</span>
+        </a>
+    </section>
+</body>
+
+
+
+
+@code {
+    private string errorMessage = string.Empty;
+
+    private NewCakeDto newCakeDto = new NewCakeDto();
+
+    private Recipe NewCakeRecipe = new Recipe();
+    private IEnumerable<string> filterDifficultyLevelValue = Cake.allowedDifficultyLevels;
+
+    public async Task AddNewCakeRecipe()
+    {
+        int newCakeId = await CakeService.AddEmptyCake();
+
+        var response = await CakeService.ModifyCake(newCakeDto, newCakeId);
+
+        if(response.Success)
+        {
+            errorMessage = string.Empty;
+            await RecipeService.AddNewRecipe(newCakeDto, newCakeId);
+            NavigationManager.NavigateTo($"/cakeslist/{newCakeId}");
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
+
+    }
+
+    private async void OnInputFileChanged(InputFileChangeEventArgs inputFileChangeEvent)
+    {
+        var file = inputFileChangeEvent.File;
+
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+
+        newCakeDto.Picture = $"data:image/png;base64,{Convert.ToBase64String(buffer)}";
+    }
+
+    private async void OnInputRecipeContentsChanged(InputFileChangeEventArgs inputFileChangeEvent)
+    {
+        var file = inputFileChangeEvent.File;
+
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+
+        string result = System.Text.Encoding.UTF8.GetString(buffer);
+
+        newCakeDto.RecipeSteps = result;
+    }
+
+    public async void Cancel()
+    {
+        NavigationManager.NavigateTo("/CakesList");
+    }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("");
+    }
+}
