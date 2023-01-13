@@ -42,6 +42,7 @@ And display recipe:
 
 
 **VIEW FOR A USER WHO IS LOGGED IN:**
+
 After clicking a button "checkout our incredible recipes" on home page, the user is redirected to page with recipes:
 ![2023-01-13 15_47_11-Window](https://user-images.githubusercontent.com/74303970/212348050-884f74a9-97b7-49d5-996a-0ff263eda7c0.png)
 
