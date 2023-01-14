@@ -62,9 +62,10 @@
 #*.rtf   diff=astextplain
 #*.RTF   diff=astextplain
 
+BlazorApp4/Client/wwwroot/* linguist-vendored=true
 wwwroot/** linguist-vendored=true
 BlazorApp4/Client/wwwroot/** linguist-vendored=true
-./BlazorApp4/Client/wwwroot/** linguist-vendored=true
+./BlazorApp4/Client/wwwroot/* linguist-vendored=true
 BlazorApp4/Client/wwwroot/* linguist-vendored=true
 *.css linguist-vendored
 *.html linguist-vendored
