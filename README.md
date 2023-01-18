@@ -5,10 +5,10 @@
 This is a recipe web application built for an academic project. 
 Used technologies:
 - C# for backend 
-- Blazor for frontend 
 - HTML, CSS
 - SQL Server for database holding all data
 - Frameworks and libraries:
+  - Blazor for frontend (c# + html)
   - .NET Core 6.0
   - Entity Framework Core
   - Blazored LocalStorage (for holding logged in user JWT token)
