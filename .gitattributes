@@ -68,6 +68,6 @@
 #./BlazorApp4/Client/wwwroot/* linguist-vendored=true
 #./BlazorApp4/Client/wwwroot/Site2_whole_main_page/* linguist-vendored=true
 #./BlazorApp4/Client/wwwroot/** linguist-vendored=true
-#*.css linguist-vendored
+*.css linguist-vendored
 *.html linguist-vendored
 #*.js linguist-vendored
